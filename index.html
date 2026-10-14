@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="M ♥ V">
+<meta name="theme-color" content="#F3F2F0">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>:root{color-scheme:light}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Micael ♥ Vivi</title>
+<style>
+/* Layout: one iPhone-sized app (390×844) centered in a frame on desktop; full-screen on a phone. Screens stack inside the frame; tab bar floats as a Liquid Glass capsule. */
+:root{
+  --page-bg:#E6E4E0;
+  --page-fg:#1C1C1E;
+  --bezel:#141414;
+  --app-bg:#F3F2F0;
+  --card:#FFFFFF;
+  --ink:#1C1C1E;
+  --muted:#6E6E73;
+  --hair:rgba(0,0,0,.06);
+  --ring:rgba(0,0,0,.045);
+  --accent:#8A1C3B;
+  --accent-tint:#F6E4EA;
+  --neutral-tint:#ECEBE9;
+  --top:60px;
+  --font:-apple-system,"SF Pro Text","SF Pro Display",system-ui,"Helvetica Neue",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page-bg:#121113;--page-fg:#F3F2F0;--bezel:#2A282B;color-scheme:dark}}
+:root[data-theme="dark"]{--page-bg:#121113;--page-fg:#F3F2F0;--bezel:#2A282B;color-scheme:dark}
+
+html,body{height:100%}
+body{margin:0;background:var(--page-bg);color:var(--page-fg);font-family:var(--font);-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding-block:24px;box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
+button{font:inherit;cursor:pointer}
+input,textarea,select{font:inherit}
+
+.phone{position:relative;width:390px;height:844px;background:var(--app-bg);color:var(--ink);border-radius:60px;overflow:hidden;box-shadow:0 0 0 10px var(--bezel),0 30px 80px rgba(0,0,0,.35);font-size:15px;line-height:1.3;flex-shrink:0}
+.phone::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#0E0E0F;z-index:30;pointer-events:none}
+
+@media (max-width:480px),(max-height:900px){
+  :root{--top:14px}
+  body{padding-block:0}
+  .phone{width:100%;height:100%;border-radius:0;box-shadow:none}
+  .phone::before{display:none}
+}
+
+/* screens */
+.screen{position:absolute;inset:0;background:var(--app-bg);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .32s cubic-bezier(.2,.8,.2,1)}
+.screen.push{transform:translateX(100%);opacity:1}
+.screen.active{opacity:1;pointer-events:auto;transform:none;z-index:2}
+.screen.push.active{z-index:5}
+.scroll{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:var(--top) 20px 130px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+h1.big{margin:18px 0 2px;font-size:34px;font-weight:700;letter-spacing:-.025em;line-height:1.1;text-wrap:balance}
+.sub{margin:0;font-size:14px;color:var(--muted)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.topbar{display:flex;align-items:center;justify-content:space-between}
+.mark{display:flex;align-items:center;gap:5px;font-weight:700;font-size:15px;letter-spacing:-.01em;padding:6px 12px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px rgba(0,0,0,.05)}
+.av{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.av.m{background:var(--ink)}.av.v{background:var(--accent)}
+.avs{display:flex;align-items:center}.avs .av{box-shadow:0 0 0 2px var(--app-bg)}.avs .av+.av{margin-left:-8px}
+.card{background:var(--card);border-radius:20px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px var(--ring)}
+.row-card{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;color:var(--ink);text-align:left;width:100%;border:0;background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px var(--ring)}
+.row-card:active{transform:scale(.985)}
+.tile{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chip{font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;line-height:16px;white-space:nowrap}
+.chip.m{background:var(--neutral-tint);color:var(--ink)}.chip.v{background:var(--accent-tint);color:var(--accent)}.chip.wait{background:var(--neutral-tint);color:var(--muted)}
+.stars{display:inline-flex;gap:1px;vertical-align:middle}
+.star{position:relative;display:inline-block}
+.star svg{display:block}
+.star .fill{position:absolute;inset:0;overflow:hidden}
+.stack{display:flex;flex-direction:column;gap:10px}
+.pill{font-size:13px;font-weight:600;padding:7px 13px;border-radius:999px;border:0;background:var(--card);color:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.06);white-space:nowrap}
+.pill.on{background:var(--ink);color:#fff;box-shadow:none}
+
+/* glass */
+.glass{background:rgba(255,255,255,.56);-webkit-backdrop-filter:blur(28px) saturate(190%);backdrop-filter:blur(28px) saturate(190%);border:1px solid rgba(255,255,255,.82);box-shadow:0 12px 32px rgba(28,20,24,.14),0 1px 2px rgba(28,20,24,.06),inset 0 1px 0 rgba(255,255,255,.95)}
+.tabbar{position:absolute;left:14px;right:14px;bottom:26px;display:flex;align-items:center;gap:10px;z-index:10;transition:transform .3s ease,opacity .2s ease}
+.tabbar.hide{transform:translateY(130px);opacity:0;pointer-events:none}
+.tabs{flex:1;height:66px;border-radius:33px;display:flex;align-items:center;padding:7px;gap:2px;position:relative}
+.tab{flex:1;height:52px;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:600;letter-spacing:.01em;border:0;background:transparent;position:relative;z-index:1;transition:color .2s}
+.tab.on{color:var(--accent)}
+.tab-ind{position:absolute;top:7px;left:7px;width:calc((100% - 14px)/4);height:52px;border-radius:26px;background:rgba(255,255,255,.92);box-shadow:0 2px 10px rgba(0,0,0,.08),inset 0 0 0 1px #fff;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.fab{width:66px;height:66px;border-radius:33px;display:flex;align-items:center;justify-content:center;color:var(--ink);flex-shrink:0;padding:0}
+.fab:active,.glassbtn:active{transform:scale(.95)}
+.glassbtn{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;color:var(--ink);padding:0}
+
+/* detail */
+.hero{position:relative;height:300px;overflow:hidden;background:#1B1517}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:50% 70%;display:block}
+.hero .scrim{position:absolute;left:0;right:0;bottom:0;height:170px;background:linear-gradient(to top,rgba(18,12,14,.82),rgba(18,12,14,0))}
+.hero .title{position:absolute;left:20px;right:20px;bottom:20px;color:#fff;display:flex;flex-direction:column;gap:4px}
+.meta{padding:4px 16px}
+.meta .r{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--hair)}
+.meta .r:first-child{border-top:0}
+.actionbar{position:absolute;left:14px;right:14px;bottom:26px;display:flex;gap:10px;align-items:center;z-index:10}
+.primary{height:56px;border-radius:28px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:600;border:0;width:100%;box-shadow:0 8px 20px rgba(138,28,59,.28)}
+.primary:active{transform:scale(.985)}
+
+/* sheets */
+.sheet-wrap{position:absolute;inset:0;z-index:20;pointer-events:none}
+.sheet-wrap .dim{position:absolute;inset:0;background:rgba(22,12,16,.5);opacity:0;transition:opacity .25s}
+.sheet{position:absolute;left:0;right:0;bottom:0;border-radius:38px 38px 0 0;background:rgba(255,255,255,.94);padding:10px 22px 0;display:flex;flex-direction:column;gap:14px;transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);border-bottom:0;max-height:94%;overflow-y:auto;scrollbar-width:none}
+.sheet::-webkit-scrollbar{display:none}
+.sheet-wrap.open{pointer-events:auto}.sheet-wrap.open .dim{opacity:1}.sheet-wrap.open .sheet{transform:none}
+.handle{width:36px;height:5px;border-radius:3px;background:rgba(0,0,0,.18);margin:0 auto;flex-shrink:0}
+.sheet h2{margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.rate-star{width:52px;height:52px;border:0;background:transparent;padding:0;display:flex;align-items:center;justify-content:center;border-radius:16px}
+.rate-star:active{background:rgba(0,0,0,.05)}
+.step{font-size:14px;font-weight:600;height:40px;padding:0 16px;border-radius:999px;border:0;background:var(--app-bg);color:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.05)}
+.field{display:flex;align-items:center;gap:12px;min-height:46px;border-top:1px solid var(--hair)}
+.field:first-child{border-top:0}
+.field label{width:110px;flex-shrink:0;font-size:15px}
+.field input,.field select{flex:1;min-width:0;border:0;background:transparent;font-size:15px;text-align:right;color:var(--ink);padding:0;outline:none;-webkit-appearance:none;appearance:none}
+.field input::placeholder{color:#8E8E93}
+.field input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+textarea.obs{width:100%;resize:none;border:0;border-radius:16px;padding:12px 14px;font-size:15px;line-height:1.4;background:var(--app-bg);color:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.05)}
+.switch{width:51px;height:31px;border-radius:16px;background:var(--accent);border:0;position:relative;flex-shrink:0;padding:0;transition:background .2s}
+.switch span{position:absolute;top:2px;left:22px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2);transition:left .2s}
+.switch[aria-checked="false"]{background:#D8D6D2}.switch[aria-checked="false"] span{left:2px}
+
+/* checklist */
+.item{display:flex;align-items:center;gap:12px;min-height:46px;border-top:1px solid var(--hair);text-align:left;width:100%;background:transparent;border-left:0;border-right:0;border-bottom:0;padding:0;color:var(--ink)}
+.item:first-child{border-top:0}
+.box{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(0,0,0,.22);transition:background .15s,border-color .15s}
+.item.done .box{background:var(--accent);border-color:var(--accent)}
+.item .lbl{flex:1;display:flex;flex-direction:column;gap:1px;min-width:0}
+.item.done .lbl>span:first-child{color:var(--muted)}
+.item .when{font-size:12px;color:var(--muted);display:none}
+.item.done .when{display:block}
+.bar{flex:1;height:6px;border-radius:3px;background:#E3E1DD;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .3s ease}
+
+/* agenda */
+.day{display:flex;flex-direction:column;align-items:center;gap:6px;width:44px;padding:8px 0;border-radius:14px;border:0;background:transparent;color:var(--ink)}
+.day.today{background:var(--ink);color:#fff}
+.day .dot{width:5px;height:5px;border-radius:50%;background:transparent}
+.day .dot.has{background:var(--accent)}
+.ev{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px var(--ring);border:0;width:100%;text-align:left;color:var(--ink)}
+.ev .d{width:46px;display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.ev .d b{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.ev .d small{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.04em;margin-top:3px}
+.ev .sep{width:1px;height:36px;background:rgba(0,0,0,.08)}
+
+.toast{position:absolute;top:62px;left:50%;transform:translate(-50%,-20px);opacity:0;padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;z-index:40;transition:all .25s ease;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.stat{padding:14px;display:flex;flex-direction:column;gap:4px;color:var(--ink);text-align:left;border:0}
+.num{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="phone" id="phone">
+
+<!-- ===== VINHOS ===== -->
+<section class="screen tab-screen active" id="s-vinhos">
+  <div class="scroll">
+    <div class="topbar">
+      <div class="mark"><span>M</span><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10A4 4 0 0 1 12 8a4 4 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg><span>V</span></div>
+      <div class="avs"><div class="av m">M</div><div class="av v">V</div></div>
+    </div>
+    <h1 class="big">Vinhos</h1>
+    <p class="sub" id="vinhos-sub">3 provados juntos · desde 10 de outubro</p>
+
+    <div class="card" style="margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:14px 0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;border-right:1px solid var(--hair)"><div class="num" style="font-size:24px;color:var(--accent)" id="st-media">4,3</div><div style="font-size:11px;color:var(--muted);font-weight:500">média do casal</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;border-right:1px solid var(--hair)"><div class="num" style="font-size:24px" id="st-best">5,0</div><div style="font-size:11px;color:var(--muted);font-weight:500">melhor nota</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div class="num" style="font-size:24px" id="st-count">3</div><div style="font-size:11px;color:var(--muted);font-weight:500">vinhos</div></div>
+    </div>
+
+    <div style="margin-top:16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px" id="filters">
+      <button class="pill on" data-f="todos">Todos</button><button class="pill" data-f="tinto">Tintos</button><button class="pill" data-f="branco">Brancos</button><button class="pill" data-f="rose">Rosés</button><button class="pill" data-f="espumante">Espumantes</button>
+    </div>
+
+    <div style="margin-top:22px;display:flex;align-items:baseline;justify-content:space-between"><div class="eyebrow">Outubro</div><div style="font-size:12px;color:var(--muted)">mais recente primeiro</div></div>
+    <div class="stack" style="margin-top:10px" id="wine-list"></div>
+
+    <div class="eyebrow" style="margin-top:22px">Para provar</div>
+    <div class="stack" style="margin-top:10px">
+      <button class="row-card" onclick="openNovo('Pata Negra Rosé','rose')">
+        <div class="tile" style="background:#FCE8EE"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4587A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-.6 6.2A3.4 3.4 0 0 1 12 12.4a3.4 3.4 0 0 1-3.4-3.2L8 3z"/><path d="M12 12.4V20M8.5 20h7"/></svg></div>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">Pata Negra Rosé</div><div style="font-size:13px;color:var(--muted)">salvo pela Vivi · ainda sem nota</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9A6A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button class="row-card" onclick="openNovo('Chandon Brut','espumante')">
+        <div class="tile" style="background:#EEF1E7"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5E7A3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-.6 6.2A3.4 3.4 0 0 1 12 12.4a3.4 3.4 0 0 1-3.4-3.2L8 3z"/><path d="M12 12.4V20M8.5 20h7"/></svg></div>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">Chandon Brut</div><div style="font-size:13px;color:var(--muted)">salvo pelo Micael · pra comemorar</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9A6A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LISTA ===== -->
+<section class="screen tab-screen" id="s-lista">
+  <div class="scroll">
+    <div class="topbar">
+      <div class="mark"><span>M</span><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10A4 4 0 0 1 12 8a4 4 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg><span>V</span></div>
+      <button class="glassbtn" style="width:36px;height:36px;background:var(--card);border:0;box-shadow:0 0 0 1px rgba(0,0,0,.05)" aria-label="Filtrar lista"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button>
+    </div>
+    <h1 class="big" style="font-size:30px">Coisas para fazer juntos</h1>
+    <p class="sub" id="lista-sub"></p>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:12px"><div class="bar"><i id="lista-bar" style="width:20%"></i></div><div style="font-size:13px;font-weight:600;color:var(--accent);width:36px;text-align:right;font-variant-numeric:tabular-nums" id="lista-pct">20%</div></div>
+    <div id="lista-sections"></div>
+  </div>
+</section>
+
+<!-- ===== AGENDA ===== -->
+<section class="screen tab-screen" id="s-agenda">
+  <div class="scroll">
+    <div class="topbar">
+      <div class="mark"><span>M</span><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10A4 4 0 0 1 12 8a4 4 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg><span>V</span></div>
+      <button class="pill" style="color:var(--accent)">Hoje</button>
+    </div>
+    <h1 class="big">Agenda</h1>
+    <p class="sub" id="agenda-sub">Outubro · 4 compromissos marcados</p>
+    <div class="card" style="margin-top:16px;padding:8px 6px;display:flex;justify-content:space-between" id="week">
+      <button class="day"><small>SEG</small><b>12</b><span class="dot"></span></button>
+      <button class="day today" aria-current="date"><small>TER</small><b>13</b><span class="dot"></span></button>
+      <button class="day"><small>QUA</small><b>14</b><span class="dot"></span></button>
+      <button class="day"><small>QUI</small><b>15</b><span class="dot"></span></button>
+      <button class="day"><small>SEX</small><b>16</b><span class="dot"></span></button>
+      <button class="day"><small>SÁB</small><b>17</b><span class="dot has"></span></button>
+      <button class="day"><small>DOM</small><b>18</b><span class="dot"></span></button>
+    </div>
+    <div class="eyebrow" style="margin-top:22px">Esta semana</div>
+    <div class="stack" style="margin-top:10px" id="ev-week"></div>
+    <div class="eyebrow" style="margin-top:22px">Próximos</div>
+    <div class="stack" style="margin-top:10px" id="ev-next"></div>
+    <div id="suggest" style="margin-top:14px;background:var(--ink);color:#fff;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.7"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8z"/></svg>Sugestão da lista</div>
+      <div style="font-size:15px;line-height:1.35">Vocês ainda não marcaram <strong>Cozinhar juntos</strong>. O próximo sábado livre é 24 out.</div>
+      <div style="display:flex;gap:8px"><button class="pill" onclick="marcarSugestao()">Marcar</button><button class="pill" style="background:rgba(255,255,255,.12);color:#fff;box-shadow:none" onclick="document.getElementById('suggest').hidden=true">Depois</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NÓS ===== -->
+<section class="screen tab-screen" id="s-nos">
+  <div class="scroll">
+    <div class="topbar">
+      <div style="width:36px"></div>
+      <div class="avs"><div class="av m" style="width:44px;height:44px;font-size:16px">M</div><div class="av v" style="width:44px;height:44px;font-size:16px;margin-left:-12px">V</div></div>
+      <button class="glassbtn" style="width:36px;height:36px;background:var(--card);border:0;box-shadow:0 0 0 1px rgba(0,0,0,.05)" aria-label="Ajustes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+    <h1 class="big" style="font-size:30px;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px"><span>Micael</span><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10A4 4 0 0 1 12 8a4 4 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg><span>Vivi</span></h1>
+    <p class="sub" style="text-align:center;margin-top:6px">desde o primeiro date, 10 de outubro de 2026</p>
+    <div style="margin-top:18px;background:var(--ink);color:#fff;border-radius:22px;padding:20px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;flex-direction:column;gap:2px"><div class="eyebrow" style="color:#fff;opacity:.65">Juntos há</div><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:52px;font-weight:700;letter-spacing:-.04em;line-height:1" id="dias">3</span><span style="font-size:18px;font-weight:500;opacity:.85">dias</span></div><div style="font-size:13px;opacity:.65">e contando</div></div>
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10A4 4 0 0 1 12 8a4 4 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg></div>
+    </div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+      <button class="card stat" onclick="goTab('vinhos')"><div style="font-size:12px;color:var(--muted);font-weight:500">Vinhos</div><div class="num" id="nos-count">3</div><div style="font-size:12px;color:var(--muted)" id="nos-media">média do casal 4,3</div></button>
+      <button class="card stat" onclick="goTab('lista')"><div style="font-size:12px;color:var(--muted);font-weight:500">Lista</div><div class="num" id="nos-lista">4<span style="font-size:15px;color:var(--muted);font-weight:500">/20</span></div><div style="font-size:12px;color:var(--muted)" id="nos-lista-sub">16 ideias esperando</div></button>
+      <button class="card stat" onclick="goTab('agenda')"><div style="font-size:12px;color:var(--muted);font-weight:500">Dates</div><div class="num" id="nos-dates">4</div><div style="font-size:12px;color:var(--muted)">próximo: sáb 17, 20h</div></button>
+      <button class="card stat" onclick="openDetail(1)"><div style="font-size:12px;color:var(--muted);font-weight:500">Melhor nota</div><div class="num" style="color:var(--accent)" id="nos-best">5,0</div><div style="font-size:12px;color:var(--muted)" id="nos-best-sub">Alma Negra · 10 out</div></button>
+    </div>
+    <div class="card" style="margin-top:12px;padding:16px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between"><div class="eyebrow">Quem dá nota mais alta</div><div style="font-size:12px;color:var(--muted)" id="cmp-n">3 vinhos</div></div>
+      <div style="display:flex;align-items:center;gap:10px"><div class="av m" style="width:28px;height:28px;font-size:11px">M</div><div class="bar" style="height:8px;border-radius:4px"><i id="cmp-m" style="background:var(--ink);width:87%"></i></div><div style="width:32px;text-align:right;font-size:14px;font-weight:700" id="cmp-m-n">4,3</div></div>
+      <div style="display:flex;align-items:center;gap:10px"><div class="av v" style="width:28px;height:28px;font-size:11px">V</div><div class="bar" style="height:8px;border-radius:4px"><i id="cmp-v" style="width:83%"></i></div><div style="width:32px;text-align:right;font-size:14px;font-weight:700" id="cmp-v-n">4,2</div></div>
+      <div style="font-size:13px;color:var(--muted)" id="cmp-txt">Micael é 0,2 mais generoso. Por enquanto.</div>
+    </div>
+    <div class="card meta" style="margin-top:12px;padding:2px 16px">
+      <button class="item" style="min-height:50px"><div class="tile" style="width:30px;height:30px;border-radius:9px;background:var(--accent-tint)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9.5 3.5 3.5 0 0 1 17.5 18z"/></svg></div><div class="lbl"><span>Compartilhado com a Vivi</span><span style="font-size:12px;color:var(--muted)">iCloud · sincronizado agora</span></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A9A6A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <button class="item" style="min-height:50px"><div class="tile" style="width:30px;height:30px;border-radius:9px;background:var(--neutral-tint)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></div><div class="lbl"><span>Notificações</span></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A9A6A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <button class="item" style="min-height:50px"><div class="tile" style="width:30px;height:30px;border-radius:9px;background:var(--neutral-tint)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg></div><div class="lbl"><span>Exportar nossa história</span></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A9A6A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DETALHE ===== -->
+<section class="screen push" id="s-detalhe">
+  <div class="scroll" style="padding:0 0 110px" id="detail-body"></div>
+  <div class="actionbar">
+    <button class="primary glass" style="background:rgba(138,28,59,.86);border-color:rgba(255,255,255,.35)" onclick="openAvaliar()"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg><span id="rate-btn-label">Editar minha nota</span></button>
+  </div>
+</section>
+
+<!-- ===== TAB BAR ===== -->
+<nav class="tabbar" id="tabbar" aria-label="Navegação principal">
+  <div class="tabs glass">
+    <div class="tab-ind" id="tab-ind"></div>
+    <button class="tab on" data-tab="vinhos" onclick="goTab('vinhos')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-.6 6.2A3.4 3.4 0 0 1 12 12.4a3.4 3.4 0 0 1-3.4-3.2L8 3z"/><path d="M12 12.4V20M8.5 20h7"/></svg><span>Vinhos</span></button>
+    <button class="tab" data-tab="lista" onclick="goTab('lista')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l2 2 3.5-3.5"/><path d="M4 15.5l2 2 3.5-3.5"/><path d="M13 7h7M13 16h7"/></svg><span>Lista</span></button>
+    <button class="tab" data-tab="agenda" onclick="goTab('agenda')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Agenda</span></button>
+    <button class="tab" data-tab="nos" onclick="goTab('nos')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10A4 4 0 0 1 12 8a4 4 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg><span>Nós</span></button>
+  </div>
+  <button class="fab glass" aria-label="Novo registro" onclick="openNovo()"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+</nav>
+
+<!-- ===== SHEET: AVALIAR ===== -->
+<div class="sheet-wrap" id="sh-avaliar">
+  <div class="dim" onclick="closeSheet('sh-avaliar')"></div>
+  <div class="sheet glass" role="dialog" aria-label="Sua avaliação">
+    <div class="handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+      <div style="display:flex;flex-direction:column;gap:2px"><h2>Sua avaliação</h2><div style="font-size:13px;color:var(--muted)" id="av-sub">Alma Negra · 10 out · Kin</div></div>
+      <button style="font-size:15px;font-weight:600;color:var(--accent);background:none;border:0;padding:10px 0 10px 12px" onclick="closeSheet('sh-avaliar')">Fechar</button>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:8px">
+      <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:64px;font-weight:700;letter-spacing:-.04em;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums" id="av-score">4,5</span><span style="font-size:16px;color:var(--muted);font-weight:500">/ 5</span></div>
+      <div style="font-size:14px;font-weight:600" id="av-label">Excelente</div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:2px" id="av-stars" role="group" aria-label="Nota em estrelas"></div>
+    <div style="display:flex;justify-content:center;gap:8px"><button class="step" onclick="setDraft(draft-0.5)">− 0,5</button><button class="step" onclick="setDraft(draft+0.5)">+ 0,5</button></div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+      <label for="obs" class="eyebrow">Observações</label>
+      <textarea id="obs" class="obs" rows="3" placeholder="O que você achou? Aroma, corpo, com o que combinou…"></textarea>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--app-bg);border-radius:16px;padding:12px 14px;box-shadow:0 0 0 1px rgba(0,0,0,.05)" id="av-vivi"></div>
+    <button class="primary" style="margin:6px 0 30px" onclick="saveRating()">Salvar avaliação</button>
+  </div>
+</div>
+
+<!-- ===== SHEET: NOVO ===== -->
+<div class="sheet-wrap" id="sh-novo">
+  <div class="dim" onclick="closeSheet('sh-novo')"></div>
+  <form class="sheet glass" role="dialog" aria-label="Novo registro" id="novo-form" onsubmit="saveNovo(event)">
+    <div class="handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+      <button type="button" style="font-size:16px;color:var(--accent);background:none;border:0;padding:8px 0" onclick="closeSheet('sh-novo')">Cancelar</button>
+      <div style="font-size:17px;font-weight:600;letter-spacing:-.01em">Novo registro</div>
+      <button type="submit" style="font-size:16px;font-weight:700;color:var(--accent);background:none;border:0;padding:8px 0">Salvar</button>
+    </div>
+    <button type="button" style="border:0;height:112px;border-radius:20px;background:var(--app-bg);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)">
+      <div style="width:40px;height:40px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,.06)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.2"/></svg></div>
+      <div style="font-size:14px;font-weight:600">Adicionar foto</div>
+    </button>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="eyebrow" style="padding-left:4px">Vinho</div>
+      <div class="card" style="padding:2px 16px">
+        <div class="field"><label for="f-nome">Nome</label><input id="f-nome" type="text" placeholder="Qual vinho?" required></div>
+        <div class="field"><label for="f-tipo">Tipo</label><select id="f-tipo"><option value="tinto">Tinto</option><option value="branco">Branco</option><option value="rose">Rosé</option><option value="espumante">Espumante</option></select><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A9A6A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10l4 4 4-4"/></svg></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="eyebrow" style="padding-left:4px">Quando e onde</div>
+      <div class="card" style="padding:2px 16px">
+        <div class="field"><label for="f-data">Data</label><input id="f-data" type="text" value="Ter, 13 out 2026"></div>
+        <div class="field"><label for="f-local">Local</label><input id="f-local" type="text" placeholder="Onde foi?"></div>
+        <div class="field"><label for="f-ocasiao">Ocasião</label><input id="f-ocasiao" type="text" placeholder="Date, jantar, comemoração…"></div>
+        <div class="field"><label for="f-prog">Programação</label><input id="f-prog" type="text" placeholder="O que vocês fizeram?"></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="eyebrow" style="padding-left:4px">Avaliação</div>
+      <div class="card" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between"><span>Sua nota</span><div style="display:flex;gap:0" id="novo-stars" role="group" aria-label="Sua nota"></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:10px;border-top:1px solid var(--hair)">
+          <div style="display:flex;flex-direction:column;gap:2px"><div>Pedir a nota da Vivi</div><div style="font-size:12px;color:var(--muted)">ela avalia do celular dela</div></div>
+          <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Pedir a nota da Vivi" id="f-pedir" onclick="toggleSwitch(this)"><span></span></button>
+        </div>
+      </div>
+    </div>
+    <div style="height:30px;flex-shrink:0"></div>
+  </form>
+</div>
+
+<div class="toast glass" id="toast"></div>
+</div>
+
+<script>
+const STAR='M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z';
+const TYPES={tinto:['#F6E4EA','#8A1C3B','Tinto'],branco:['#FBEFE3','#B5742A','Branco'],rose:['#FCE8EE','#C4587A','Rosé'],espumante:['#EEF1E7','#5E7A3A','Espumante']};
+const state={
+  wines:[
+    {id:1,name:'Alma Negra',type:'tinto',origin:'Mendoza',date:'10 out',dateFull:'Sáb, 10 de out. 2026',place:'Kin · Manaus',occasion:'Primeiro date',program:'Jantar no Kin',m:5,v:5,photo:'kin.jpg',notesM:'Encorpado, combinou demais com o sushi. Primeiro date, não tinha como ser outra nota.',notesV:'Final suave, meio adocicado. A melhor noite.',whenM:'10 out, 23:43',whenV:'11 out, 09:12'},
+    {id:2,name:'Catena Malbec',type:'tinto',origin:'Mendoza',date:'11 out',dateFull:'Dom, 11 de out. 2026',place:'Em casa',occasion:'Noite de filme',program:'Filme no sofá',m:4.5,v:4,notesM:'Mais seco que o Alma Negra. Bom pra filme.',notesV:'Gostei, mas fiquei com sono no meio do filme.',whenM:'11 out, 22:10',whenV:'12 out, 08:40'},
+    {id:3,name:'Portada Branco',type:'branco',origin:'Lisboa',date:'12 out',dateFull:'Seg, 12 de out. 2026',place:'Em casa',occasion:'Almoço de domingo',program:'Almoço na casa dos pais',m:3.5,v:3.5,notesM:'Leve, serviu bem gelado.',notesV:'Ok. Prefiro tinto.',whenM:'12 out, 15:02',whenV:'12 out, 15:30'}
+  ],
+  nextId:4,
+  filter:'todos',
+  lista:[
+    {title:'Gastronomia & drinks',items:[['g1','Fazer uma noite de vinhos'],['g2','Tomar caipirinha de café'],['g3','Experimentar um vinho novo','feito em 10 out · Alma Negra'],['g4','Ir a um restaurante desconhecido'],['g5','Cozinhar juntos'],['g6','Fazer uma degustação de vinhos'],['g7','Tomar café da manhã juntos']]},
+    {title:'Dates & experiências',items:[['d1','Ir ao cinema','feito em 12 out'],['d2','Assistir ao nascer do sol'],['d3','Assistir ao pôr do sol'],['d4','Fazer uma noite de jogos'],['d5','Ir a um show'],['d6','Montar uma playlist nossa','feito em 11 out'],['d7','Fazer um date surpresa'],['d8','Recriar nosso primeiro date'],['d9','Jogar tennis'],['d10','Fazer spinning']]},
+    {title:'Planos espontâneos',items:[['p1','Sair sem destino'],['p2','Dirigir ouvindo nossa playlist','feito em 12 out'],['p3','Conhecer um lugar novo à noite']]}
+  ],
+  done:{g3:true,d1:true,d6:true,p2:true},
+  events:[
+    {week:true,day:'17',dow:'SÁB',title:'Noite de vinhos',meta:'20:00 · Em casa',chips:['da lista','Vivi marcou'],both:true},
+    {day:'22',dow:'QUI',title:'Cinema',meta:'19:30 · sessão da noite',chips:[]},
+    {day:'25',dow:'DOM',title:'Café da manhã juntos',meta:'09:00 · lugar a definir',chips:['da lista']},
+    {day:'31',dow:'SÁB',title:'Pôr do sol na Ponta Negra',meta:'17:45 · levar o Chandon',chips:['da lista']}
+  ]
+};
+let current=null, draft=4.5, novoDraft=0, tab='vinhos';
+const $=s=>document.querySelector(s);
+const fmt=x=>(Math.round(x*10)/10).toFixed(1).replace('.',',');
+const avg=w=>(w.m!=null&&w.v!=null)?Math.round(((w.m+w.v)/2)*10)/10:null;
+function starsHTML(score,size,color){
+  color=color||'var(--accent)';let h='<span class="stars" aria-hidden="true">';
+  for(let n=1;n<=5;n++){
+    const full=score>=n,half=!full&&score>=n-0.5;
+    const svg=c=>`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${c}"><path d="${STAR}"/></svg>`;
+    h+=`<span class="star">${svg(full?color:'#DDDAD6')}${half?`<span class="fill" style="width:50%">${svg(color)}</span>`:''}</span>`;
+  }
+  return h+'</span>';
+}
+const LABELS={5:'Perfeito',4.5:'Excelente',4:'Muito bom',3.5:'Bom',3:'Ok',2.5:'Meh',2:'Fraco',1.5:'Fraco',1:'Não repete',0.5:'Não repete',0:'Sem nota'};
+
+/* ---------- navigation ---------- */
+function goTab(t){
+  tab=t;
+  document.querySelectorAll('.tab-screen').forEach(s=>s.classList.toggle('active',s.id==='s-'+t));
+  $('#s-detalhe').classList.remove('active');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  const i=['vinhos','lista','agenda','nos'].indexOf(t);
+  $('#tab-ind').style.transform=`translateX(${i*100}%)`;
+  $('#tabbar').classList.remove('hide');
+}
+function openDetail(id){
+  current=state.wines.find(w=>w.id===id);
+  renderDetail();
+  $('#s-detalhe').querySelector('.scroll').scrollTop=0;
+  $('#s-detalhe').classList.add('active');
+  $('#tabbar').classList.add('hide');
+}
+function back(){ $('#s-detalhe').classList.remove('active'); $('#tabbar').classList.remove('hide'); }
+function closeSheet(id){ $('#'+id).classList.remove('open'); }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),1800); }
+function toggleSwitch(b){ b.setAttribute('aria-checked', b.getAttribute('aria-checked')==='true'?'false':'true'); }
+
+/* ---------- vinhos ---------- */
+function renderList(){
+  const list=$('#wine-list');
+  const ws=state.wines.filter(w=>state.filter==='todos'||w.type===state.filter);
+  list.innerHTML=ws.length?ws.map(w=>{
+    const t=TYPES[w.type],a=avg(w);
+    return `<button class="row-card" onclick="openDetail(${w.id})">
+      <div class="tile" style="background:${t[0]}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${t[1]}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-.6 6.2A3.4 3.4 0 0 1 12 12.4a3.4 3.4 0 0 1-3.4-3.2L8 3z"/><path d="M12 12.4V20M8.5 20h7"/></svg></div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+        <div style="font-size:16px;font-weight:600;letter-spacing:-.01em">${w.name}</div>
+        <div style="font-size:13px;color:var(--muted)">${[w.date,w.place.split(' · ')[0],w.occasion].filter(Boolean).join(' · ')}</div>
+        <div style="display:flex;gap:6px;margin-top:3px">${w.m!=null?`<span class="chip m">M ${fmt(w.m)}</span>`:`<span class="chip wait">M —</span>`}${w.v!=null?`<span class="chip v">V ${fmt(w.v)}</span>`:`<span class="chip wait">V aguardando</span>`}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <div style="font-size:22px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums">${a!=null?fmt(a):'<span style="color:#A9A6A1">—</span>'}</div>
+        ${a!=null?starsHTML(a,11):'<span style="font-size:11px;color:var(--muted)">sem média</span>'}
+      </div></button>`;
+  }).join(''):'<div style="padding:28px;text-align:center;color:var(--muted);font-size:14px">Nenhum vinho desse tipo ainda.</div>';
+  renderStats();
+}
+function renderStats(){
+  const rated=state.wines.filter(w=>avg(w)!=null);
+  const mean=rated.length?rated.reduce((s,w)=>s+avg(w),0)/rated.length:0;
+  const best=rated.length?Math.max(...rated.map(avg)):0;
+  const bestW=rated.find(w=>avg(w)===best);
+  $('#st-media').textContent=rated.length?fmt(mean):'—';
+  $('#st-best').textContent=rated.length?fmt(best):'—';
+  $('#st-count').textContent=state.wines.length;
+  $('#vinhos-sub').textContent=`${state.wines.length} provados juntos · desde 10 de outubro`;
+  $('#nos-count').textContent=state.wines.length;
+  $('#nos-media').textContent=`média do casal ${rated.length?fmt(mean):'—'}`;
+  $('#nos-best').textContent=rated.length?fmt(best):'—';
+  if(bestW) $('#nos-best-sub').textContent=`${bestW.name} · ${bestW.date}`;
+  const mM=state.wines.filter(w=>w.m!=null),mV=state.wines.filter(w=>w.v!=null);
+  const am=mM.length?mM.reduce((s,w)=>s+w.m,0)/mM.length:0, av=mV.length?mV.reduce((s,w)=>s+w.v,0)/mV.length:0;
+  $('#cmp-m').style.width=(am/5*100)+'%'; $('#cmp-v').style.width=(av/5*100)+'%';
+  $('#cmp-m-n').textContent=fmt(am); $('#cmp-v-n').textContent=fmt(av); $('#cmp-n').textContent=`${state.wines.length} vinhos`;
+  const d=Math.round((am-av)*10)/10;
+  $('#cmp-txt').textContent=d>0?`Micael é ${fmt(d)} mais generoso. Por enquanto.`:d<0?`Vivi é ${fmt(-d)} mais generosa. Por enquanto.`:'Empate. Por enquanto.';
+}
+$('#filters').addEventListener('click',e=>{const b=e.target.closest('.pill');if(!b)return;state.filter=b.dataset.f;document.querySelectorAll('#filters .pill').forEach(p=>p.classList.toggle('on',p===b));renderList();});
+
+function renderDetail(){
+  const w=current,t=TYPES[w.type],a=avg(w);
+  const hero=w.photo?`<img src="${w.photo}" alt="Mesa do jantar no Kin, com taças de vinho e sushi">`:`<div style="position:absolute;inset:0;background:${t[0]};display:flex;align-items:center;justify-content:center"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="${t[1]}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-.6 6.2A3.4 3.4 0 0 1 12 12.4a3.4 3.4 0 0 1-3.4-3.2L8 3z"/><path d="M12 12.4V20M8.5 20h7"/></svg></div>`;
+  const dark=!!w.photo;
+  const person=(k,name,score,notes,when)=>`<div style="display:flex;align-items:center;gap:10px${k==='v'?';border-left:1px solid var(--hair);padding-left:12px':''}"><div class="av ${k}" style="width:34px;height:34px;font-size:13px">${k.toUpperCase()}</div><div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:12px;color:var(--muted);font-weight:500">${name}</div>${score!=null?`<div style="display:flex;align-items:center;gap:6px"><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">${fmt(score)}</span>${starsHTML(score,11)}</div>`:`<div style="font-size:13px;color:var(--muted)">aguardando</div>`}</div></div>`;
+  const note=(k,name,text,when)=>text?`<div class="card" style="padding:14px 16px;display:flex;gap:12px"><div class="av ${k}" style="width:28px;height:28px;font-size:11px">${k.toUpperCase()}</div><div style="display:flex;flex-direction:column;gap:3px"><div style="font-size:12px;color:var(--muted)"><span style="font-weight:600;color:var(--ink)">${name}</span>${when?' · '+when:''}</div><p style="margin:0;font-size:14px;line-height:1.4">${text}</p></div></div>`:'';
+  $('#detail-body').innerHTML=`
+  <div class="hero" style="${dark?'':'background:'+t[0]}">${hero}${dark?'<div class="scrim"></div>':''}
+    <button class="glassbtn glass" style="position:absolute;top:var(--top);left:16px;border:0" aria-label="Voltar" onclick="back()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <div style="position:absolute;top:var(--top);right:16px;display:flex;gap:8px">
+      <button class="glassbtn glass" style="border:0" aria-label="Compartilhar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg></button>
+      <button class="glassbtn glass" style="border:0" aria-label="Mais opções"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="6" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="18" cy="12" r="1.8"/></svg></button>
+    </div>
+    <div class="title" style="${dark?'':'color:var(--ink)'}"><div class="eyebrow" style="${dark?'color:#fff;opacity:.85':''}">#${String(w.id).padStart(2,'0')} · ${t[2]}${w.origin?' · '+w.origin:''}</div><h1 style="margin:0;font-size:34px;font-weight:700;letter-spacing:-.025em;line-height:1.05">${w.name}</h1></div>
+  </div>
+  <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:12px">
+    <div class="card meta">
+      <div class="r"><span style="color:var(--muted)">Data</span><span style="font-weight:500">${w.dateFull}</span></div>
+      <div class="r"><span style="color:var(--muted)">Ocasião</span><span style="font-weight:500;display:flex;align-items:center;gap:6px">${w.occasion==='Primeiro date'?'<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10A4 4 0 0 1 12 8a4 4 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg>':''}${w.occasion||'—'}</span></div>
+      <div class="r"><span style="color:var(--muted)">Programação</span><span style="font-weight:500">${w.program||'—'}</span></div>
+      <div class="r"><span style="color:var(--muted)">Local</span><span style="font-weight:500">${w.place||'—'}</span></div>
+    </div>
+    <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">${person('m','Micael',w.m)}${person('v','Vivi',w.v)}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--hair)">
+        <div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:12px;color:var(--muted);font-weight:500">Média do casal</div><div style="font-size:13px;color:var(--muted)">${a==null?'aparece quando os dois avaliarem':w.m===w.v?'os dois concordaram':'diferença de '+fmt(Math.abs(w.m-w.v))}</div></div>
+        <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1;color:${a==null?'#C9C6C1':'var(--accent)'};font-variant-numeric:tabular-nums">${a==null?'—':fmt(a)}</span><span style="font-size:14px;color:var(--muted);font-weight:500">/ 5</span></div>
+      </div>
+    </div>
+    ${(w.notesM||w.notesV)?'<div class="eyebrow" style="margin-top:6px">Observações</div>':''}
+    ${note('m','Micael',w.notesM,w.whenM)}${note('v','Vivi',w.notesV,w.whenV)}
+  </div>`;
+  $('#rate-btn-label').textContent=w.m==null?'Dar minha nota':'Editar minha nota';
+}
+
+/* ---------- avaliar ---------- */
+function openAvaliar(){
+  draft=current.m!=null?current.m:4;
+  $('#av-sub').textContent=`${current.name} · ${current.date} · ${current.place.split(' · ')[0]}`;
+  $('#obs').value=current.notesM||'';
+  renderDraft();
+  $('#sh-avaliar').classList.add('open');
+}
+function setDraft(x){ draft=Math.max(0,Math.min(5,Math.round(x*2)/2)); renderDraft(); }
+function renderDraft(){
+  $('#av-score').textContent=fmt(draft);
+  $('#av-label').textContent=LABELS[draft]||'';
+  $('#av-stars').innerHTML=[1,2,3,4,5].map(n=>{
+    const c=draft>=n?'var(--accent)':draft>=n-0.5?'half':'#DDDAD6';
+    const svg=c==='half'?`<span class="star"><svg width="40" height="40" viewBox="0 0 24 24" fill="#DDDAD6"><path d="${STAR}"/></svg><span class="fill" style="width:50%"><svg width="40" height="40" viewBox="0 0 24 24" fill="var(--accent)"><path d="${STAR}"/></svg></span></span>`:`<svg width="40" height="40" viewBox="0 0 24 24" fill="${c}" aria-hidden="true"><path d="${STAR}"/></svg>`;
+    return `<button type="button" class="rate-star" onclick="setDraft(${n})" aria-label="${n} estrela${n>1?'s':''}">${svg}</button>`;
+  }).join('');
+  const v=current.v;
+  $('#av-vivi').innerHTML=v!=null
+    ?`<div style="display:flex;align-items:center;gap:10px"><div class="av v" style="width:28px;height:28px;font-size:11px">V</div><div style="display:flex;flex-direction:column;gap:1px"><div style="font-size:14px;font-weight:600">Vivi já avaliou</div><div style="font-size:12px;color:var(--muted)">deu ${fmt(v)}</div></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px"><div style="font-size:12px;color:var(--muted)">média vai ficar</div><div style="font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--accent)">${fmt((draft+v)/2)}</div></div>`
+    :`<div style="display:flex;align-items:center;gap:10px"><div class="av v" style="width:28px;height:28px;font-size:11px;opacity:.5">V</div><div style="display:flex;flex-direction:column;gap:1px"><div style="font-size:14px;font-weight:600">Vivi ainda não avaliou</div><div style="font-size:12px;color:var(--muted)">a média aparece quando ela der a nota</div></div></div>`;
+}
+function saveRating(){
+  current.m=draft; const o=$('#obs').value.trim(); if(o){current.notesM=o;current.whenM='hoje';}
+  closeSheet('sh-avaliar'); renderDetail(); renderList(); toast('Nota salva · '+fmt(draft));
+}
+
+/* ---------- novo ---------- */
+function openNovo(name,type){
+  $('#novo-form').reset(); novoDraft=0; renderNovoStars();
+  if(name){$('#f-nome').value=name;} if(type){$('#f-tipo').value=type;}
+  $('#f-pedir').setAttribute('aria-checked','true');
+  $('#sh-novo').classList.add('open');
+}
+function setNovo(n){ novoDraft=novoDraft===n?0:n; renderNovoStars(); }
+function renderNovoStars(){
+  $('#novo-stars').innerHTML=[1,2,3,4,5].map(n=>`<button type="button" class="rate-star" style="width:36px;height:36px;border-radius:10px" onclick="setNovo(${n})" aria-label="${n} estrela${n>1?'s':''}"><svg width="24" height="24" viewBox="0 0 24 24" fill="${novoDraft>=n?'var(--accent)':'#DDDAD6'}" aria-hidden="true"><path d="${STAR}"/></svg></button>`).join('');
+}
+function saveNovo(e){
+  e.preventDefault();
+  const name=$('#f-nome').value.trim(); if(!name){$('#f-nome').focus();return;}
+  const pedir=$('#f-pedir').getAttribute('aria-checked')==='true';
+  const dataTxt=$('#f-data').value.trim()||'Ter, 13 out 2026';
+  const short=dataTxt.replace(/^[A-Za-zÀ-ú]+,\s*/,'').replace(/\s*\d{4}$/,'');
+  state.wines.unshift({id:state.nextId++,name,type:$('#f-tipo').value,origin:'',date:short,dateFull:dataTxt,place:$('#f-local').value.trim(),occasion:$('#f-ocasiao').value.trim(),program:$('#f-prog').value.trim(),m:novoDraft||null,v:null});
+  closeSheet('sh-novo'); state.filter='todos'; document.querySelectorAll('#filters .pill').forEach(p=>p.classList.toggle('on',p.dataset.f==='todos'));
+  renderList(); goTab('vinhos'); $('#s-vinhos .scroll').scrollTo({top:0,behavior:'smooth'});
+  toast(pedir?'Registrado · pedimos a nota da Vivi':'Registrado');
+}
+
+/* ---------- lista ---------- */
+function renderLista(){
+  let total=0,done=0;
+  $('#lista-sections').innerHTML=state.lista.map(sec=>{
+    let sd=0;
+    const items=sec.items.map(([id,label,when])=>{total++;const d=!!state.done[id];if(d){done++;sd++;}
+      return `<button class="item${d?' done':''}" onclick="toggleItem('${id}')" aria-pressed="${d}"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:${d?1:0}"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="lbl"><span>${label}</span><span class="when">${when||'feito hoje'}</span></span></button>`;}).join('');
+    return `<div style="margin-top:22px;display:flex;align-items:baseline;justify-content:space-between"><div class="eyebrow">${sec.title}</div><div style="font-size:12px;color:var(--muted)">${sd}/${sec.items.length}</div></div><div class="card" style="margin-top:8px;padding:2px 16px">${items}</div>`;
+  }).join('');
+  const pct=Math.round(done/total*100);
+  $('#lista-sub').textContent=`${done} de ${total} feitos · ${total-done} ideias esperando`;
+  $('#lista-bar').style.width=pct+'%'; $('#lista-pct').textContent=pct+'%';
+  $('#nos-lista').innerHTML=`${done}<span style="font-size:15px;color:var(--muted);font-weight:500">/${total}</span>`;
+  $('#nos-lista-sub').textContent=`${total-done} ideias esperando`;
+}
+function toggleItem(id){ if(state.done[id])delete state.done[id];else state.done[id]=true; renderLista(); }
+
+/* ---------- agenda ---------- */
+function renderAgenda(){
+  const ev=e=>`<button class="ev"><div class="d"><b style="${e.week?'color:var(--accent)':''}">${e.day}</b><small>${e.dow}</small></div><div class="sep"></div><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">${e.title}</div><div style="font-size:13px;color:var(--muted)">${e.meta}</div>${e.chips.length?`<div style="display:flex;gap:6px;margin-top:3px">${e.chips.map((c,i)=>`<span class="chip ${i===0?'v':'m'}">${c}</span>`).join('')}</div>`:''}</div>${e.both?'<div class="avs"><div class="av m" style="width:26px;height:26px;font-size:10px;box-shadow:0 0 0 2px #fff">M</div><div class="av v" style="width:26px;height:26px;font-size:10px;margin-left:-7px;box-shadow:0 0 0 2px #fff">V</div></div>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9A6A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'}</button>`;
+  $('#ev-week').innerHTML=state.events.filter(e=>e.week).map(ev).join('');
+  $('#ev-next').innerHTML=state.events.filter(e=>!e.week).map(ev).join('');
+  $('#agenda-sub').textContent=`Outubro · ${state.events.length} compromissos marcados`;
+  $('#nos-dates').textContent=state.events.length;
+}
+function marcarSugestao(){
+  state.events.splice(2,0,{day:'24',dow:'SÁB',title:'Cozinhar juntos',meta:'19:00 · Em casa',chips:['da lista','Micael marcou']});
+  $('#suggest').hidden=true; renderAgenda(); toast('Marcado pra sáb 24');
+}
+
+renderList(); renderLista(); renderAgenda();
+window.__show=function(name){ /* used for screenshots */
+  closeSheet('sh-avaliar');closeSheet('sh-novo');
+  if(name==='detalhe'){goTab('vinhos');openDetail(1);} else if(name==='avaliar'){goTab('vinhos');openDetail(1);openAvaliar();} else if(name==='novo'){goTab('vinhos');openNovo();} else goTab(name);
+};
+</script>
+
+</body>
+</html>
